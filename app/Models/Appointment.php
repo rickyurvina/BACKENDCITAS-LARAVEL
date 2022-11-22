@@ -9,17 +9,23 @@ class Appointment extends Model
 {
     use HasFactory;
 
-    protected $fillable=[
+    protected $fillable = [
         'name',
-        'owner',
+
         'email',
         'phone',
         'date',
         'symptom',
+        'owner_id'
     ];
 
     protected $casts = [
         'date' => 'date:Y-m',
     ];
+
+    public function owner()
+    {
+        return $this->belongsTo(Owner::class,'owner_id');
+    }
 
 }

@@ -58,7 +58,6 @@ class AppointmentController extends Controller
         } catch (\Exception $exception) {
             DB::rollBack();
             return response()->json(['error' => $exception->getMessage()]);
-
         }
     }
 
@@ -71,6 +70,9 @@ class AppointmentController extends Controller
     public function show(int $id)
     {
         $appointment = Appointment::find($id);
+        $appointments=$appointment->owner->appointments;
+        $codeName=$appointment->owner->concatCodeName();
+
         return response()->json($appointment);
     }
 
