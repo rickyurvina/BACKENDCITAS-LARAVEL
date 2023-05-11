@@ -16,7 +16,7 @@ return new class extends Migration
         //
         Schema::table('appointments', function (Blueprint $table){
             $table->dropColumn('owner');
-            $table->foreignId('owner_id');
+            $table->foreignId('owner_id')->nullable();
         });
     }
 
