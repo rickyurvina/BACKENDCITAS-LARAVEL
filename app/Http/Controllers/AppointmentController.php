@@ -39,7 +39,7 @@ class AppointmentController extends Controller
             'phone' => 'nullable',
             'date' => 'nullable|date',
             'symptom' => 'nullable',
-            'owner_id'=>'nullable'
+            'owner'=>'nullable'
         ]));
 
         try {
@@ -86,7 +86,7 @@ class AppointmentController extends Controller
     {
         $fields = $request->validate(([
             'name' => 'required',
-            'owner' => 'required|unique:appointments',
+            'owner' => 'required',
             'email' => 'nullable|email',
             'phone' => 'nullable',
             'date' => 'nullable|date',
