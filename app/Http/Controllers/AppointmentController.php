@@ -8,7 +8,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -33,22 +32,23 @@ class AppointmentController extends Controller
      */
     public function store(Request $request)
     {
+
         $fields = $request->validate(([
             'name' => 'required',
-            'owner' => 'required',
             'email' => 'nullable|email',
             'phone' => 'nullable',
+            'date' => 'nullable|date',
             'symptom' => 'nullable',
+            'owner_id'=>'nullable'
         ]));
 
         try {
             DB::beginTransaction();
             $appointment = Appointment::create([
                 'name' => $fields['name'],
-                'owner' => $fields['owner'],
                 'email' => $fields['email'],
                 'phone' => $fields['phone'],
-                'date' => $fields['date'] ?? null,
+                'date' => $fields['date'] ?? now(),
                 'symptom' => $fields['symptom'],
             ]);
             DB::commit();
@@ -86,7 +86,7 @@ class AppointmentController extends Controller
     {
         $fields = $request->validate(([
             'name' => 'required',
-            'owner' => 'required',
+            'owner' => 'required|unique:appointments',
             'email' => 'nullable|email',
             'phone' => 'nullable',
             'date' => 'nullable|date',
@@ -132,5 +132,39 @@ class AppointmentController extends Controller
             DB::rollBack();
             throw new \Exception($exception->getMessage());
         }
+    }
+
+    public function saveOrder(Request $request){
+
+        $request=[
+            'order'=>[
+                'mesa_id'=>4,
+                'price'=>20000
+            ],
+            'detallesOrden'=>[
+                [
+                    'product_id'=>3,
+                    'cant'=>4
+                ],
+                [
+                    'product_id'=>4,
+                    'cant'=>1
+                ]
+            ]
+        ];
+
+        $order=Orden::create([$arr['order']]);
+        $detallesOrden=$arr['detallesOrden'];
+        foreach($detallesOrden as $detalle){
+            DetalleOrden::create([
+                'order_id'=>$order->id,
+                'product_id'=>$detalle['product_id'],
+                'cant'=>$detalle['cant']
+            ]);
+        }
+
+        return DetalleOrden::get();
+
+
     }
 }

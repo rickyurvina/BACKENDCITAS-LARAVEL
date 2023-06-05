@@ -20,3 +20,5 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::resource('appointment',AppointmentController::class);
+
+Route::post('/dettaleOrden',[AppointmentController::class,'saveOrder0']);
