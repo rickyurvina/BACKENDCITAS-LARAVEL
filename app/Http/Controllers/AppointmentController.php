@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -32,13 +33,11 @@ class AppointmentController extends Controller
      */
     public function store(Request $request)
     {
-
         $fields = $request->validate(([
             'name' => 'required',
-            'owner' => 'required|unique:appointments',
+            'owner' => 'required',
             'email' => 'nullable|email',
             'phone' => 'nullable',
-            'date' => 'nullable|date',
             'symptom' => 'nullable',
         ]));
 
@@ -87,7 +86,7 @@ class AppointmentController extends Controller
     {
         $fields = $request->validate(([
             'name' => 'required',
-            'owner' => 'required|unique:appointments',
+            'owner' => 'required',
             'email' => 'nullable|email',
             'phone' => 'nullable',
             'date' => 'nullable|date',

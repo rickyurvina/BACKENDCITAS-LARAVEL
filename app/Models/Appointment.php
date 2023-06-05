@@ -11,21 +11,12 @@ class Appointment extends Model
 
     protected $fillable = [
         'name',
-
         'email',
         'phone',
-        'date',
         'symptom',
-        'owner_id'
+        'owner',
+        'date'
     ];
 
-    protected $casts = [
-        'date' => 'date:Y-m',
-    ];
-
-    public function owner()
-    {
-        return $this->belongsTo(Owner::class,'owner_id');
-    }
 
 }
