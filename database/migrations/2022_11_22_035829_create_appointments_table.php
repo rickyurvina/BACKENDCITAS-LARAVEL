@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('owner')->nullable();
+            $table->foreignId('user_id');
             $table->string('email')->nullable();
             $table->string('phone')->nullable();;
             $table->timestamp('date')->nullable();;

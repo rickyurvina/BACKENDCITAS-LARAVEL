@@ -14,9 +14,14 @@ class Appointment extends Model
         'email',
         'phone',
         'symptom',
-        'owner',
+        'user_id',
         'date'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
 
 }

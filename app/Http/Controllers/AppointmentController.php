@@ -20,7 +20,7 @@ class AppointmentController extends Controller
      */
     public function index()
     {
-        return response()->json(Appointment::all());
+        return response()->json(Appointment::with('user')->get());
     }
 
 
@@ -39,7 +39,7 @@ class AppointmentController extends Controller
             'phone' => 'nullable',
             'date' => 'nullable|date',
             'symptom' => 'nullable',
-            'owner'=>'nullable'
+            'owner' => 'nullable'
         ]));
 
         try {
@@ -50,6 +50,7 @@ class AppointmentController extends Controller
                 'phone' => $fields['phone'],
                 'date' => $fields['date'] ?? now(),
                 'symptom' => $fields['symptom'],
+                'user_id' => $fields['owner'],
             ]);
             DB::commit();
             return response()->json($appointment);
@@ -68,9 +69,9 @@ class AppointmentController extends Controller
      */
     public function show(int $id)
     {
-        $appointment = Appointment::find($id);
-        $appointments=$appointment->owner->appointments;
-        $codeName=$appointment->owner->concatCodeName();
+        $appointment = Appointment::with('user')->find($id);
+        $appointments = $appointment->owner->appointments;
+        $codeName = $appointment->owner->concatCodeName();
 
         return response()->json($appointment);
     }
@@ -95,13 +96,13 @@ class AppointmentController extends Controller
 
         try {
             DB::beginTransaction();
-            $appointment = Appointment::where('id', $fields['id'])->update([
+            $appointment = Appointment::with('user')->where('id', $fields['id'])->update([
                 'id' => $fields['id'],
                 'name' => $fields['name'],
-                'owner' => $fields['owner'],
+                'user_id' => $fields['owner'],
                 'email' => $fields['email'],
                 'phone' => $fields['phone'],
-                'date' => $fields['date'],
+                'date' => $fields['date'] ?? now(),
                 'symptom' => $fields['symptom'],
             ]);
             DB::commit();
@@ -132,39 +133,5 @@ class AppointmentController extends Controller
             DB::rollBack();
             throw new \Exception($exception->getMessage());
         }
-    }
-
-    public function saveOrder(Request $request){
-
-        $request=[
-            'order'=>[
-                'mesa_id'=>4,
-                'price'=>20000
-            ],
-            'detallesOrden'=>[
-                [
-                    'product_id'=>3,
-                    'cant'=>4
-                ],
-                [
-                    'product_id'=>4,
-                    'cant'=>1
-                ]
-            ]
-        ];
-
-        $order=Orden::create([$arr['order']]);
-        $detallesOrden=$arr['detallesOrden'];
-        foreach($detallesOrden as $detalle){
-            DetalleOrden::create([
-                'order_id'=>$order->id,
-                'product_id'=>$detalle['product_id'],
-                'cant'=>$detalle['cant']
-            ]);
-        }
-
-        return DetalleOrden::get();
-
-
     }
 }
