@@ -8,6 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 
@@ -20,7 +21,7 @@ class AppointmentController extends Controller
      */
     public function index()
     {
-        return response()->json(Appointment::with('user')->get());
+        return response()->json(Appointment::with('user')->orderBy('id', 'desc')->get());
     }
 
 
@@ -32,6 +33,7 @@ class AppointmentController extends Controller
      */
     public function store(Request $request)
     {
+        Log::info($request->all());
 
         $fields = $request->validate(([
             'name' => 'required',
@@ -49,7 +51,7 @@ class AppointmentController extends Controller
                 'email' => $fields['email'],
                 'phone' => $fields['phone'],
                 'date' => $fields['date'] ?? now(),
-                'symptom' => $fields['symptom'],
+                'symptom' => $fields['symptom'] ?? '',
                 'user_id' => $fields['owner'],
             ]);
             DB::commit();
@@ -70,8 +72,6 @@ class AppointmentController extends Controller
     public function show(int $id)
     {
         $appointment = Appointment::with('user')->find($id);
-        $appointments = $appointment->owner->appointments;
-        $codeName = $appointment->owner->concatCodeName();
 
         return response()->json($appointment);
     }
