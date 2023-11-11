@@ -96,7 +96,7 @@ class AppointmentController extends Controller
 
         try {
             DB::beginTransaction();
-            $appointment = Appointment::with('user')->where('id', $fields['id'])->update([
+            $appointment = Appointment::where('id', $fields['id'])->update([
                 'id' => $fields['id'],
                 'name' => $fields['name'],
                 'user_id' => $fields['owner'],
