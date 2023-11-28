@@ -20,3 +20,5 @@ use Illuminate\Support\Facades\Route;
 Route::resource('appointment', AppointmentController::class);
 
 Route::get('users', [UserController::class, 'index']);
+
+Route::get('profile', [\App\Http\Controllers\ProfileController::class, 'profile']);
